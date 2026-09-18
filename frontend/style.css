@@ -1,0 +1,500 @@
+:root {
+    --background: #111210;
+    --surface: #191a17;
+    --surface-light: #21221f;
+
+    --text: #f2f0e9;
+    --muted: #9c9c94;
+
+    --accent: #c8a96b;
+    --accent-hover: #d8bb80;
+
+    --border: #30312d;
+
+    --success: #8fbf91;
+    --danger: #d68176;
+
+    --radius: 18px;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(200, 169, 107, 0.06),
+            transparent 35%
+        ),
+        var(--background);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    min-height: 100vh;
+}
+
+
+.topbar {
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 5vw;
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+
+    color: var(--accent);
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+.brand-name {
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+.brand-subtitle {
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    color: var(--muted);
+}
+
+
+.score {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+
+    color: var(--muted);
+}
+
+
+.score span {
+    margin-left: 10px;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: var(--text);
+}
+
+
+.container {
+    width: min(900px, 90vw);
+
+    margin: 80px auto;
+}
+
+
+.card {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+
+.hero {
+    padding: 70px;
+
+    max-width: 780px;
+}
+
+
+.eyebrow,
+.section-label {
+    color: var(--accent);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 2px;
+}
+
+
+h1 {
+    margin: 20px 0 22px;
+
+    font-size: clamp(42px, 7vw, 70px);
+
+    line-height: 0.98;
+
+    letter-spacing: -3px;
+
+    font-weight: 500;
+}
+
+
+.intro {
+    max-width: 600px;
+
+    font-size: 20px;
+    line-height: 1.6;
+
+    color: var(--text);
+}
+
+
+.description {
+    max-width: 600px;
+
+    margin-bottom: 40px;
+
+    line-height: 1.7;
+
+    color: var(--muted);
+}
+
+
+.primary-button,
+.secondary-button {
+    cursor: pointer;
+
+    border: 0;
+
+    font-family: inherit;
+
+    transition: 0.2s ease;
+}
+
+
+.primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 35px;
+
+    padding: 17px 22px;
+
+    background: var(--accent);
+
+    color: #141410;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.primary-button:hover {
+    background: var(--accent-hover);
+
+    transform: translateY(-1px);
+}
+
+
+.primary-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.35;
+
+    transform: none;
+}
+
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+    margin-bottom: 25px;
+}
+
+
+.step-label {
+    margin-top: 8px;
+
+    font-size: 13px;
+
+    color: var(--muted);
+}
+
+
+.progress {
+    width: 180px;
+    height: 3px;
+
+    background: var(--border);
+}
+
+
+#progress-fill {
+    width: 33%;
+    height: 100%;
+
+    background: var(--accent);
+
+    transition: width 0.3s ease;
+}
+
+
+.scenario-card {
+    padding: 55px;
+}
+
+
+.scenario-card h2 {
+    max-width: 720px;
+
+    margin: 18px 0 50px;
+
+    font-size: 27px;
+    line-height: 1.45;
+
+    font-weight: 400;
+
+    letter-spacing: -0.4px;
+}
+
+
+.decision-label {
+    margin-bottom: 16px;
+}
+
+
+.options {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.option {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 18px;
+
+    width: 100%;
+
+    padding: 20px;
+
+    cursor: pointer;
+
+    background: var(--surface-light);
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    transition: 0.2s ease;
+}
+
+
+.option:hover {
+    border-color: #55564f;
+
+    transform: translateY(-1px);
+}
+
+
+.option.selected {
+    background: rgba(200, 169, 107, 0.08);
+
+    border-color: var(--accent);
+}
+
+
+.option-letter {
+    min-width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    color: var(--accent);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.option-text {
+    padding-top: 4px;
+
+    color: #d9d7d0;
+
+    line-height: 1.5;
+}
+
+
+.submit-button {
+    margin-top: 28px;
+}
+
+
+.feedback {
+    margin-top: 20px;
+
+    padding: 32px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+
+.feedback-header {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.feedback-status {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.feedback.correct .feedback-status {
+    color: var(--success);
+}
+
+
+.feedback.incorrect .feedback-status {
+    color: var(--danger);
+}
+
+
+.points {
+    color: var(--accent);
+
+    font-weight: 600;
+}
+
+
+.feedback p {
+    max-width: 700px;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+
+.secondary-button {
+    margin-top: 10px;
+
+    padding: 0;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-size: 14px;
+}
+
+
+.secondary-button span {
+    margin-left: 10px;
+
+    color: var(--accent);
+}
+
+
+.final-score {
+    margin: 35px 0;
+
+    color: var(--accent);
+
+    font-size: 75px;
+    font-weight: 500;
+}
+
+
+.final-score small {
+    font-size: 20px;
+
+    color: var(--muted);
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+footer {
+    padding: 30px 5vw 40px;
+
+    color: #5f605b;
+
+    font-size: 10px;
+    letter-spacing: 1.8px;
+}
+
+
+@media (max-width: 650px) {
+
+    .topbar {
+        padding: 0 25px;
+    }
+
+    .container {
+        margin-top: 40px;
+    }
+
+    .hero,
+    .scenario-card {
+        padding: 35px 25px;
+    }
+
+    h1 {
+        font-size: 46px;
+        letter-spacing: -2px;
+    }
+
+    .progress {
+        width: 90px;
+    }
+
+}

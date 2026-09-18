@@ -1,10 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
 from content import steps
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Answer(BaseModel):
     choice: str
