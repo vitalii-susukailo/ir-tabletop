@@ -7,24 +7,32 @@ import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from pymongo import MongoClient
 
 
 app = FastAPI()
 
 
-# URL винесено в env для Kubernetes.
+# URL scenario-service для локального запуску і Kubernetes.
 SCENARIO_URL = os.environ.get(
     "SCENARIO_URL",
     "http://localhost:8001"
 )
 
 
-# Поки зберігаємо сесії в пам'яті.
-sessions = {}
+# Підключення до MongoDB.
+MONGO_URL = os.environ.get(
+    "MONGO_URL",
+    "mongodb://localhost:27017"
+)
+
+mongo_client = MongoClient(MONGO_URL)
+
+db = mongo_client["ir_tabletop"]
+sessions = db["sessions"]
 
 
 class AnswerRequest(BaseModel):
-    # Крок тепер визначає сервер, а не клієнт.
     choice: str
 
 
@@ -37,37 +45,47 @@ def health():
 def create_session():
     session_id = str(uuid4())
 
-    sessions[session_id] = {
-        "id": session_id,
+    session = {
+        "_id": session_id,
         "score": 0,
-        "current_step": 1,  # Поточний крок зберігаємо в сесії.
+        "current_step": 1,
         "completed": False,
         "answers": []
     }
 
-    return {"id": session_id}
+    sessions.insert_one(session)
+
+    return {
+        "id": session_id
+    }
 
 
 @app.get("/sessions/{session_id}")
 def get_session(session_id: str):
-    if session_id not in sessions:
+    session = sessions.find_one(
+        {"_id": session_id}
+    )
+
+    if session is None:
         raise HTTPException(
             status_code=404,
             detail="Session not found"
         )
 
-    return sessions[session_id]
+    return session
 
 
 @app.get("/sessions/{session_id}/step")
 async def get_current_step(session_id: str):
-    if session_id not in sessions:
+    session = sessions.find_one(
+        {"_id": session_id}
+    )
+
+    if session is None:
         raise HTTPException(
             status_code=404,
             detail="Session not found"
         )
-
-    session = sessions[session_id]
 
     if session["completed"]:
         return {
@@ -85,6 +103,11 @@ async def get_current_step(session_id: str):
 
     if response.status_code == 404:
         session["completed"] = True
+
+        sessions.replace_one(
+            {"_id": session_id},
+            session
+        )
 
         return {
             "completed": True,
@@ -105,13 +128,15 @@ async def submit_answer(
     session_id: str,
     answer: AnswerRequest
 ):
-    if session_id not in sessions:
+    session = sessions.find_one(
+        {"_id": session_id}
+    )
+
+    if session is None:
         raise HTTPException(
             status_code=404,
             detail="Session not found"
         )
-
-    session = sessions[session_id]
 
     if session["completed"]:
         raise HTTPException(
@@ -119,7 +144,7 @@ async def submit_answer(
             detail="Session already completed"
         )
 
-    # Клієнт більше не може вибрати номер кроку.
+    # Клієнт більше не визначає номер кроку.
     step_id = session["current_step"]
 
     async with httpx.AsyncClient() as client:
@@ -157,11 +182,17 @@ async def submit_answer(
         "points": result["points"]
     })
 
-    # Одна відповідь — одна спроба, далі наступний крок.
+    # Після відповіді переходимо до наступного кроку.
     session["current_step"] += 1
 
     if session["current_step"] > total_steps:
         session["completed"] = True
+
+    # Зберігаємо оновлену сесію в MongoDB.
+    sessions.replace_one(
+        {"_id": session_id},
+        session
+    )
 
     return {
         "correct": result["correct"],
@@ -172,7 +203,7 @@ async def submit_answer(
     }
 
 
-# Frontend тепер віддає сам session-service.
+# Frontend віддає session-service.
 STATIC_DIR = Path(__file__).parent / "static"
 
 app.mount(
