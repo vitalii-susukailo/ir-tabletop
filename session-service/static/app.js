@@ -1,13 +1,6 @@
-const SCENARIO_API = "http://localhost:8001";
-const SESSION_API = "http://localhost:8002";
-
 let sessionId = null;
-let currentStep = 1;
 let selectedChoice = null;
 let score = 0;
-
-const totalSteps = 3;
-
 
 const startScreen = document.getElementById("start-screen");
 const scenarioScreen = document.getElementById("scenario-screen");
@@ -33,14 +26,13 @@ const progressFill = document.getElementById("progress-fill");
 
 startButton.addEventListener("click", startExercise);
 submitButton.addEventListener("click", submitAnswer);
-nextButton.addEventListener("click", nextStep);
+nextButton.addEventListener("click", loadStep);
 restartButton.addEventListener("click", () => location.reload());
 
 
 async function startExercise() {
-
     const response = await fetch(
-        `${SESSION_API}/sessions`,
+        "/sessions",
         {
             method: "POST"
         }
@@ -58,29 +50,29 @@ async function startExercise() {
 
 
 async function loadStep() {
-
     selectedChoice = null;
-
     submitButton.disabled = true;
-
     feedback.classList.add("hidden");
 
-    stepNumber.textContent = currentStep;
-
-    progressFill.style.width =
-        `${(currentStep / totalSteps) * 100}%`;
-
-
+    // Frontend тепер отримує крок тільки через session-service.
     const response = await fetch(
-        `${SCENARIO_API}/steps/${currentStep}`
+        `/sessions/${sessionId}/step`
     );
 
     const data = await response.json();
 
+    if (data.completed) {
+        finishExercise();
+        return;
+    }
+
     situation.textContent = data.situation;
+    stepNumber.textContent = data.id;
+
+    progressFill.style.width =
+        `${(data.id / 3) * 100}%`;
 
     options.innerHTML = "";
-
 
     Object.entries(data.options).forEach(
         ([letter, text]) => {
@@ -111,34 +103,28 @@ async function loadStep() {
 
 
 function selectOption(element, choice) {
-
     document
         .querySelectorAll(".option")
         .forEach(option =>
             option.classList.remove("selected")
         );
 
-
     element.classList.add("selected");
 
     selectedChoice = choice;
-
     submitButton.disabled = false;
 }
 
 
 async function submitAnswer() {
-
     if (!selectedChoice) {
         return;
     }
 
-
     submitButton.disabled = true;
 
-
     const response = await fetch(
-        `${SESSION_API}/sessions/${sessionId}/answer`,
+        `/sessions/${sessionId}/answer`,
         {
             method: "POST",
 
@@ -146,21 +132,17 @@ async function submitAnswer() {
                 "Content-Type": "application/json"
             },
 
+            // Передаємо тільки вибір, без номера кроку.
             body: JSON.stringify({
-                step: currentStep,
                 choice: selectedChoice
             })
         }
     );
 
-
     const result = await response.json();
 
-
-    score += result.points;
-
+    score = result.score;
     scoreElement.textContent = score;
-
 
     feedback.classList.remove(
         "hidden",
@@ -168,83 +150,54 @@ async function submitAnswer() {
         "incorrect"
     );
 
-
     if (result.correct) {
-
         feedback.classList.add("correct");
-
-        feedbackStatus.textContent =
-            "Good decision.";
-
+        feedbackStatus.textContent = "Good decision.";
     } else {
-
         feedback.classList.add("incorrect");
-
-        feedbackStatus.textContent =
-            "Not the best response.";
+        feedbackStatus.textContent = "Not the best response.";
     }
-
 
     points.textContent =
         result.points > 0
             ? `+${result.points} pts`
             : "0 pts";
 
-
-    explanation.textContent =
-        result.explanation;
-
+    explanation.textContent = result.explanation;
 
     document
         .querySelectorAll(".option")
         .forEach(option => {
             option.style.pointerEvents = "none";
         });
-}
 
-
-async function nextStep() {
-
-    currentStep++;
-
-    if (currentStep > totalSteps) {
-        finishExercise();
-        return;
+    if (result.completed) {
+        nextButton.textContent = "View results →";
+    } else {
+        nextButton.textContent = "Continue →";
     }
-
-    await loadStep();
 }
 
 
 function finishExercise() {
-
     scenarioScreen.classList.add("hidden");
-
     finishScreen.classList.remove("hidden");
-
 
     document.getElementById(
         "final-score"
     ).textContent = score;
 
-
     const message =
         document.getElementById("final-message");
 
-
     if (score === 30) {
-
         message.textContent =
-            "Strong response. You identified the phishing attempt, contained the campaign, and responded correctly to compromised credentials.";
-
+            "Strong response. You identified and contained the incident correctly.";
     } else if (score >= 20) {
-
         message.textContent =
-            "Good response overall, but some decisions could have reduced the incident risk faster.";
-
+            "Good response overall, with some opportunities to improve incident handling.";
     } else {
-
         message.textContent =
-            "The incident exposed several opportunities to improve detection, containment, and account response.";
+            "The exercise identified opportunities to improve detection and incident response.";
     }
 }
