@@ -1,57 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Armed Owl — Incident Response Tabletop</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mareld Labs — Incident Response Tabletop</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
 <header class="topbar">
+
     <div class="brand">
-        <div class="brand-mark">AO</div>
 
-        <div>
-            <div class="brand-name">ARMED OWL</div>
-            <div class="brand-subtitle">Incident Response Tabletop</div>
+        <div class="brand-mark">
+            ML
         </div>
+
+        <div class="brand-text">
+
+            <div class="brand-name">
+                MARELD LABS
+            </div>
+
+            <div class="brand-subtitle">
+                Incident Response Tabletop
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="score">
-        SCORE
-        <span id="score">0</span>
+
+    <div class="score-box">
+
+        <span class="score-label">
+            SCORE
+        </span>
+
+        <span id="score">
+            0
+        </span>
+
     </div>
+
 </header>
 
 
 <main class="container">
 
+
     <!-- Start screen -->
 
-    <section id="start-screen" class="card hero">
+    <section
+        id="start-screen"
+        class="card hero"
+    >
 
         <div class="eyebrow">
-            SECURITY EXERCISE
+            INCIDENT RESPONSE TABLETOP
         </div>
 
         <h1>
-            DocuSign QR<br>
-            Phishing Incident
+            Think Before<br>
+            You Scan.
         </h1>
 
         <p class="intro">
-            You are part of the security team responding to a suspicious
-            DocuSign campaign targeting employees.
+            A legitimate DocuSign email.
+            An unexpected document.
+            One QR code.
         </p>
 
         <p class="description">
-            Review the situation, choose the most appropriate response,
-            and see how your decisions affect the incident.
+            You are part of the security team responding to a
+            developing phishing incident.
+            Make decisions as the situation unfolds and see how
+            your response compares with the recommended approach.
         </p>
 
-        <button id="start-button" class="primary-button">
+        <button
+            id="start-button"
+            class="primary-button"
+        >
             Start exercise
             <span>→</span>
         </button>
@@ -59,21 +100,29 @@
     </section>
 
 
-    <!-- Scenario -->
+    <!-- Scenario screen -->
 
-    <section id="scenario-screen" class="hidden">
+    <section
+        id="scenario-screen"
+        class="hidden"
+    >
 
         <div class="progress-header">
 
             <div>
+
                 <div class="eyebrow">
                     INCIDENT RESPONSE
                 </div>
 
                 <div class="step-label">
-                    Step <span id="step-number">1</span> of 3
+                    Step
+                    <span id="step-number">1</span>
+                    of 3
                 </div>
+
             </div>
+
 
             <div class="progress">
                 <div id="progress-fill"></div>
@@ -84,53 +133,101 @@
 
         <div class="card scenario-card">
 
-            <div class="section-label">
-                SITUATION
-            </div>
 
-            <h2 id="situation">
-                Loading scenario...
-            </h2>
+            <!-- Left side -->
 
+            <div class="situation-panel">
 
-            <div class="section-label decision-label">
-                YOUR DECISION
-            </div>
-
-            <div id="options" class="options"></div>
-
-
-            <button
-                id="submit-button"
-                class="primary-button submit-button"
-                disabled
-            >
-                Submit decision
-            </button>
-
-        </div>
-
-
-        <div id="feedback" class="feedback hidden">
-
-            <div class="feedback-header">
-
-                <div id="feedback-status" class="feedback-status">
-                    Correct decision
+                <div class="section-label">
+                    SITUATION
                 </div>
 
-                <div id="points" class="points">
-                    +10 pts
-                </div>
+                <h2 id="situation">
+                    Loading scenario...
+                </h2>
 
             </div>
 
-            <p id="explanation"></p>
 
-            <button id="next-button" class="secondary-button">
-                Continue
-                <span>→</span>
-            </button>
+            <!-- Right side -->
+
+            <div class="decision-panel">
+
+
+                <!-- Decision view -->
+
+                <div id="decision-view">
+
+                    <div class="section-label">
+                        YOUR DECISION
+                    </div>
+
+                    <div
+                        id="options"
+                        class="options"
+                    ></div>
+
+                    <button
+                        id="submit-button"
+                        class="primary-button submit-button"
+                        disabled
+                    >
+                        Submit decision
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+
+                <!-- Feedback view -->
+
+                <div
+                    id="feedback-view"
+                    class="hidden"
+                >
+
+                    <div class="feedback-top">
+
+                        <div>
+
+                            <div class="section-label">
+                                RESPONSE REVIEW
+                            </div>
+
+                            <div
+                                id="feedback-status"
+                                class="feedback-status"
+                            >
+                                Decision reviewed
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="points"
+                            class="points"
+                        >
+                            +10 pts
+                        </div>
+
+                    </div>
+
+
+                    <p id="explanation"></p>
+
+
+                    <button
+                        id="next-button"
+                        class="secondary-button"
+                    >
+                        Continue
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -139,42 +236,65 @@
 
     <!-- Finish screen -->
 
-    <section id="finish-screen" class="card hero hidden">
+    <section
+        id="finish-screen"
+        class="card hero hidden"
+    >
 
         <div class="eyebrow">
             EXERCISE COMPLETE
         </div>
 
         <h1>
-            Incident contained.
+            Incident<br>
+            Reviewed.
         </h1>
 
         <p class="intro">
             Your final score:
         </p>
 
+
         <div class="final-score">
-            <span id="final-score">0</span>
-            <small>/ 30</small>
+
+            <span id="final-score">
+                0
+            </span>
+
+            <small>
+                / 30
+            </small>
+
         </div>
 
-        <p id="final-message" class="description"></p>
 
-        <button id="restart-button" class="primary-button">
+        <p
+            id="final-message"
+            class="description"
+        ></p>
+
+
+        <button
+            id="restart-button"
+            class="primary-button"
+        >
             Run again
             <span>↻</span>
         </button>
 
     </section>
 
+
 </main>
 
 
 <footer>
-    ARMED OWL · PRACTICAL SECURITY FOR GROWING COMPANIES
+    MARELD LABS · INCIDENT RESPONSE TABLETOP
 </footer>
+
 
 <script src="app.js"></script>
 
 </body>
+
 </html>
