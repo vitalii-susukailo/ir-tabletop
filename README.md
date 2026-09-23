@@ -120,7 +120,7 @@ Reasoning / differences
 
 This would move the exercise from a simple quiz toward reflective decision training.
 
-### Phase e — AI-supported scenario generation
+### Phase 3 — AI-supported scenario generation
 
 AI would be added **after** the expert comparison.
 
